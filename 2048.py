@@ -2,12 +2,23 @@ import pygame
 import sys
 
 pygame.init()
+pygame.display.set_caption("2048 AI")
 
 #screen parameters
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 400
 
+#tile parameter
 tile_size = 100
+
+#dictionary to link value with images
+images = dict([(2, "2.png"), (4, "4.png"), (8, "8.png"), (16, "16.png"), (32, "32.png"), (64, "64.png"), (128, "128.png"), (256, "256.png"), (512, "512.png"), (1024, "1024.png"), (2048, "2048.png")])
+
+#2D array to keep track of the game
+board = [[0, 0, 16, 0],
+         [0, 2, 0, 0],
+         [0, 0, 0, 0],
+         [4, 0, 2, 0]]
 
 #colours
 bg = (200, 200, 200)
@@ -27,6 +38,14 @@ def draw_grid(tile_size):
     for x in range(tile_size, SCREEN_HEIGHT, tile_size):
         pygame.draw.line(screen, line, (0, x), (SCREEN_WIDTH, x))
 
+#this function displays the tiles to the screen
+def correct_tiles():
+    for i in range(0, 4):
+        for j in range(0, 4):
+            if board[i][j] > 0:
+                tile = pygame.image.load(images[board[i][j]])
+                screen.blit(tile, ((j * 100) + 1, (i * 100) + 1))
+                
 
 run = True
 while run:
@@ -37,6 +56,7 @@ while run:
             run == False
 
     draw_grid(tile_size)
+    correct_tiles()
 
     pygame.display.update()
 
