@@ -12,12 +12,6 @@ tile_size = 100
 #dictionary to link value with images
 images = dict([(0, "tiles/0.png"), (2, "tiles/2.png"), (4, "tiles/4.png"), (8, "tiles/8.png"), (16, "tiles/16.png"), (32, "tiles/32.png"), (64, "tiles/64.png"), (128, "tiles/128.png"), (256, "tiles/256.png"), (512, "tiles/512.png"), (1024, "tiles/1024.png"), (2048, "tiles/2048.png")])
 
-#2D array to keep track of the game
-board = [[0, 0, 0, 0],
-        [0, 2, 0, 0],
-        [0, 0, 2, 0],
-        [0, 0, 0, 0]]
-
 #colours
 bg = (200, 200, 200)
 line = (0, 0, 0)
@@ -29,6 +23,12 @@ pygame.init()
 pygame.display.set_caption("2048 AI")
 
 class game:
+
+    #2D array to keep track of the game
+    board = [[0, 0, 0, 0],
+            [0, 2, 0, 0],
+            [0, 0, 2, 0],
+            [0, 0, 0, 0]]
 
     def __init__(self):
         #screen parameters
@@ -42,10 +42,10 @@ class game:
         images = dict([(0, "tiles/0.png"), (2, "tiles/2.png"), (4, "tiles/4.png"), (8, "tiles/8.png"), (16, "tiles/16.png"), (32, "tiles/32.png"), (64, "tiles/64.png"), (128, "tiles/128.png"), (256, "tiles/256.png"), (512, "tiles/512.png"), (1024, "tiles/1024.png"), (2048, "tiles/2048.png")])
 
         #2D array to keep track of the game
-        board = [[0, 0, 0, 0],
-                [0, 2, 0, 0],
-                [0, 0, 2, 0],
-                [0, 0, 0, 0]]
+        game.board = [[0, 0, 0, 0],
+                      [0, 2, 0, 0],
+                      [0, 0, 2, 0],
+                      [0, 0, 0, 0]]
 
         #colours
         bg = (200, 200, 200)
@@ -61,10 +61,10 @@ class game:
 
     def reset():
         #2D array to keep track of the game
-        board = [[0, 0, 0, 0],
-                [0, 2, 0, 0],
-                [0, 0, 2, 0],
-                [0, 0, 0, 0]]
+        game.board = [[0, 0, 0, 0],
+                      [0, 2, 0, 0],
+                      [0, 0, 2, 0],
+                      [0, 0, 0, 0]]
 
     #This finction draws the grid to keep the tiles in
     def draw_grid(tile_size):
@@ -82,8 +82,8 @@ class game:
     def correct_tiles():
         for i in range(0, 4):
             for j in range(0, 4):
-                if board[i][j] > 0:
-                    tile = pygame.image.load(images[board[i][j]])
+                if game.board[i][j] > 0:
+                    tile = pygame.image.load(images[game.board[i][j]])
                     screen.blit(tile, ((j * 100) + 1, (i * 100) + 1))
 
     def left():
@@ -91,7 +91,7 @@ class game:
             new_row = []
 
             #strips the row of empty tiles
-            for tile in board[i]:
+            for tile in game.board[i]:
                 if tile != 0:
                     new_row.append(tile)
 
@@ -113,14 +113,14 @@ class game:
                 new_row.append(0)
 
             #replaces the old row with the new row
-            board[i] = new_row
+            game.board[i] = new_row
 
     def right():
         for i in range(4):  # Iterate over each row
             new_row = []
 
             #reverse the row to handle movement to the right
-            reversed_row = board[i][::-1]
+            reversed_row = game.board[i][::-1]
 
             #strip the row of empty tiles
             for tile in reversed_row:
@@ -143,7 +143,7 @@ class game:
                 new_row.append(0)
 
             #reverse the row back to its original order
-            board[i] = new_row[::-1]
+            game.board[i] = new_row[::-1]
 
 
     def up():
@@ -152,8 +152,8 @@ class game:
 
             #makes a new column ignoring empty tiles
             for j in range(0, 4):
-                if board[j][i] != 0:
-                    new_column.append(board[j][i])
+                if game.board[j][i] != 0:
+                    new_column.append(game.board[j][i])
 
             #merge same values if they are adjacent
             for j in range(0, len(new_column) - 1):
@@ -174,7 +174,7 @@ class game:
 
             #replaces the old row with the new row
             for k in range(0, 4):
-                board[k][i] = new_column[k]
+                game.board[k][i] = new_column[k]
 
     def down():
         for i in range(0, 4):
@@ -183,8 +183,8 @@ class game:
             #makes a new column ignoring empty tiles
             for j in range(0, 4):
                 j = 3 - j #reverses the column
-                if board[j][i] != 0:
-                    new_column.append(board[j][i])
+                if game.board[j][i] != 0:
+                    new_column.append(game.board[j][i])
             
 
 
@@ -210,7 +210,7 @@ class game:
 
             #replaces the old row with the new row
             for k in range(0, 4):
-                board[k][i] = new_column[k]
+                game.board[k][i] = new_column[k]
 
     def place_tile():
         empty_spaces = []
@@ -218,7 +218,7 @@ class game:
         #checks the board for empty spaces
         for row in range(0, 4):
             for col in range(0, 4):
-                if board[row][col] == 0:
+                if game.board[row][col] == 0:
                     #appends a value tp the list (0-15)
                     empty_spaces.append((row * 4) + col)
 
@@ -235,16 +235,16 @@ class game:
         #update the board
         row = new_location_value // 4
         col = new_location_value % 4
-        board[row][col] = new_tile_value
+        game.board[row][col] = new_tile_value
 
     def game_over():
         # Check for empty spaces
-        for row in board:
+        for row in game.board:
             if 0 in row:
                 return False
 
         # Check for possible merges horizontally
-        for row in board:
+        for row in game.board:
             for col in range(3):  # Only need to check adjacent tiles
                 if row[col] == row[col + 1]:
                     return False
@@ -252,7 +252,7 @@ class game:
         # Check for possible merges vertically
         for col in range(4):
             for row in range(3):  # Only need to check adjacent tiles
-                if board[row][col] == board[row + 1][col]:
+                if game.board[row][col] == game.board[row + 1][col]:
                     return False
 
         return True  # No empty spaces or possible merges
@@ -260,7 +260,7 @@ class game:
     def check_win():
         for i in range(0, 4):
             for j in range(0, 4):
-                if board[i][j] == 2048:
+                if game.board[i][j] == 2048:
                     return True
                 
     def game_step():
@@ -279,7 +279,7 @@ class game:
 
             #if this is a keyboard input
             if event.type == pygame.KEYDOWN:
-                previous_board = [row[:] for row in board]  # Copy the board
+                previous_board = [row[:] for row in game.board]  # Copy the board
 
                 if event.key == pygame.K_LEFT:
                     game.left()
@@ -294,7 +294,7 @@ class game:
                     game.down()
 
                 # Check if the board has changed
-                board_changed = (previous_board != board)
+                board_changed = (previous_board != game.board)
 
         #place a tile if the board has changed
         if board_changed:
@@ -303,7 +303,7 @@ class game:
         # Check for game over
         if game.game_over():
             print("Game Over!")
-            run = False
+            game.reset()
 
         #check if the game has been finished
         if game.check_win():
