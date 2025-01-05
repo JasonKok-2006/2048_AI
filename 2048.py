@@ -263,10 +263,7 @@ class game:
                 if game.board[i][j] == 2048:
                     return True
                 
-    def game_step():
-        #gets the key that has been pressed
-        keys = pygame.key.get_pressed()
-
+    def game_step(action):
         #keeps track of the board change
         board_changed = False
 
@@ -277,24 +274,23 @@ class game:
                 sys.exit()
                 run = False
 
-            #if this is a keyboard input
-            if event.type == pygame.KEYDOWN:
-                previous_board = [row[:] for row in game.board]  # Copy the board
+        #This might cause crashes but we'll see later on
+        previous_board = [row[:] for row in game.board]  # Copy the board
 
-                if event.key == pygame.K_LEFT:
-                    game.left()
+        if action == pygame.K_LEFT:
+            game.left()
 
-                elif event.key == pygame.K_RIGHT:
-                    game.right()
+        elif action == pygame.K_RIGHT:
+            game.right()
 
-                elif event.key == pygame.K_UP:
-                    game.up()
+        elif action == pygame.K_UP:
+            game.up()
 
-                elif event.key == pygame.K_DOWN:
-                    game.down()
+        elif action == pygame.K_DOWN:
+            game.down()
 
-                # Check if the board has changed
-                board_changed = (previous_board != game.board)
+        # Check if the board has changed
+        board_changed = (previous_board != game.board)
 
         #place a tile if the board has changed
         if board_changed:
