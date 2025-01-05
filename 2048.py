@@ -30,6 +30,42 @@ pygame.display.set_caption("2048 AI")
 
 class game:
 
+    def __init__(self):
+        #screen parameters
+        SCREEN_WIDTH = 400
+        SCREEN_HEIGHT = 400
+
+        #tile parameter
+        tile_size = 100
+
+        #dictionary to link value with images
+        images = dict([(0, "tiles/0.png"), (2, "tiles/2.png"), (4, "tiles/4.png"), (8, "tiles/8.png"), (16, "tiles/16.png"), (32, "tiles/32.png"), (64, "tiles/64.png"), (128, "tiles/128.png"), (256, "tiles/256.png"), (512, "tiles/512.png"), (1024, "tiles/1024.png"), (2048, "tiles/2048.png")])
+
+        #2D array to keep track of the game
+        board = [[0, 0, 0, 0],
+                [0, 2, 0, 0],
+                [0, 0, 2, 0],
+                [0, 0, 0, 0]]
+
+        #colours
+        bg = (200, 200, 200)
+        line = (0, 0, 0)
+
+        #creates the game window
+        screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+        pygame.init()
+        pygame.display.set_caption("2048 AI")
+
+        game.reset()
+
+    def reset():
+        #2D array to keep track of the game
+        board = [[0, 0, 0, 0],
+                [0, 2, 0, 0],
+                [0, 0, 2, 0],
+                [0, 0, 0, 0]]
+
     #This finction draws the grid to keep the tiles in
     def draw_grid(tile_size):
         screen.fill(bg)
