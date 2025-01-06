@@ -22,7 +22,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.init()
 pygame.display.set_caption("2048 AI")
 
-class game:
+class Game:
 
     #2D array to keep track of the game
     board = [[0, 0, 0, 0],
@@ -42,7 +42,7 @@ class game:
         images = dict([(0, "tiles/0.png"), (2, "tiles/2.png"), (4, "tiles/4.png"), (8, "tiles/8.png"), (16, "tiles/16.png"), (32, "tiles/32.png"), (64, "tiles/64.png"), (128, "tiles/128.png"), (256, "tiles/256.png"), (512, "tiles/512.png"), (1024, "tiles/1024.png"), (2048, "tiles/2048.png")])
 
         #2D array to keep track of the game
-        game.board = [[0, 0, 0, 0],
+        Game.board = [[0, 0, 0, 0],
                       [0, 2, 0, 0],
                       [0, 0, 2, 0],
                       [0, 0, 0, 0]]
@@ -57,11 +57,11 @@ class game:
         pygame.init()
         pygame.display.set_caption("2048 AI")
 
-        game.reset()
+        Game.reset()
 
     def reset():
         #2D array to keep track of the game
-        game.board = [[0, 0, 0, 0],
+        Game.board = [[0, 0, 0, 0],
                       [0, 2, 0, 0],
                       [0, 0, 2, 0],
                       [0, 0, 0, 0]]
@@ -82,8 +82,8 @@ class game:
     def correct_tiles():
         for i in range(0, 4):
             for j in range(0, 4):
-                if game.board[i][j] > 0:
-                    tile = pygame.image.load(images[game.board[i][j]])
+                if Game.board[i][j] > 0:
+                    tile = pygame.image.load(images[Game.board[i][j]])
                     screen.blit(tile, ((j * 100) + 1, (i * 100) + 1))
 
     def left():
@@ -91,7 +91,7 @@ class game:
             new_row = []
 
             #strips the row of empty tiles
-            for tile in game.board[i]:
+            for tile in Game.board[i]:
                 if tile != 0:
                     new_row.append(tile)
 
@@ -113,14 +113,14 @@ class game:
                 new_row.append(0)
 
             #replaces the old row with the new row
-            game.board[i] = new_row
+            Game.board[i] = new_row
 
     def right():
         for i in range(4):  # Iterate over each row
             new_row = []
 
             #reverse the row to handle movement to the right
-            reversed_row = game.board[i][::-1]
+            reversed_row = Game.board[i][::-1]
 
             #strip the row of empty tiles
             for tile in reversed_row:
@@ -143,7 +143,7 @@ class game:
                 new_row.append(0)
 
             #reverse the row back to its original order
-            game.board[i] = new_row[::-1]
+            Game.board[i] = new_row[::-1]
 
 
     def up():
@@ -152,8 +152,8 @@ class game:
 
             #makes a new column ignoring empty tiles
             for j in range(0, 4):
-                if game.board[j][i] != 0:
-                    new_column.append(game.board[j][i])
+                if Game.board[j][i] != 0:
+                    new_column.append(Game.board[j][i])
 
             #merge same values if they are adjacent
             for j in range(0, len(new_column) - 1):
@@ -174,7 +174,7 @@ class game:
 
             #replaces the old row with the new row
             for k in range(0, 4):
-                game.board[k][i] = new_column[k]
+                Game.board[k][i] = new_column[k]
 
     def down():
         for i in range(0, 4):
@@ -183,8 +183,8 @@ class game:
             #makes a new column ignoring empty tiles
             for j in range(0, 4):
                 j = 3 - j #reverses the column
-                if game.board[j][i] != 0:
-                    new_column.append(game.board[j][i])
+                if Game.board[j][i] != 0:
+                    new_column.append(Game.board[j][i])
             
 
 
@@ -210,7 +210,7 @@ class game:
 
             #replaces the old row with the new row
             for k in range(0, 4):
-                game.board[k][i] = new_column[k]
+                Game.board[k][i] = new_column[k]
 
     def place_tile():
         empty_spaces = []
@@ -218,7 +218,7 @@ class game:
         #checks the board for empty spaces
         for row in range(0, 4):
             for col in range(0, 4):
-                if game.board[row][col] == 0:
+                if Game.board[row][col] == 0:
                     #appends a value tp the list (0-15)
                     empty_spaces.append((row * 4) + col)
 
@@ -235,16 +235,16 @@ class game:
         #update the board
         row = new_location_value // 4
         col = new_location_value % 4
-        game.board[row][col] = new_tile_value
+        Game.board[row][col] = new_tile_value
 
     def game_over():
         # Check for empty spaces
-        for row in game.board:
+        for row in Game.board:
             if 0 in row:
                 return False
 
         # Check for possible merges horizontally
-        for row in game.board:
+        for row in Game.board:
             for col in range(3):  # Only need to check adjacent tiles
                 if row[col] == row[col + 1]:
                     return False
@@ -252,7 +252,7 @@ class game:
         # Check for possible merges vertically
         for col in range(4):
             for row in range(3):  # Only need to check adjacent tiles
-                if game.board[row][col] == game.board[row + 1][col]:
+                if Game.board[row][col] == Game.board[row + 1][col]:
                     return False
 
         return True  # No empty spaces or possible merges
@@ -260,7 +260,7 @@ class game:
     def check_win():
         for i in range(0, 4):
             for j in range(0, 4):
-                if game.board[i][j] == 2048:
+                if Game.board[i][j] == 2048:
                     return True
                 
     def game_step(action):
@@ -275,46 +275,45 @@ class game:
                 run = False
 
         #This might cause crashes but we'll see later on
-        previous_board = [row[:] for row in game.board]  # Copy the board
+        previous_board = [row[:] for row in Game.board]  # Copy the board
 
         if action == pygame.K_LEFT:
-            game.left()
+            Game.left()
 
         elif action == pygame.K_RIGHT:
-            game.right()
+            Game.right()
 
         elif action == pygame.K_UP:
-            game.up()
+            Game.up()
 
         elif action == pygame.K_DOWN:
-            game.down()
+            Game.down()
 
         # Check if the board has changed
-        board_changed = (previous_board != game.board)
+        board_changed = (previous_board != Game.board)
 
         #place a tile if the board has changed
         if board_changed:
-            game.place_tile()
+            Game.place_tile()
 
         # Check for game over
-        if game.game_over():
+        if Game.game_over():
             print("Game Over!")
-            game.reset()
 
         #check if the game has been finished
-        if game.check_win():
+        if Game.check_win():
             print("You win!")
             run = False
 
         #functions to change the display of the game screen
-        game.draw_grid(tile_size)
-        game.correct_tiles()
+        Game.draw_grid(tile_size)
+        Game.correct_tiles()
 
         pygame.display.update()
 
 run = True
 while run:
-    game.game_step()
+    Game.game_step()
 
 pygame.display.quit()
 pygame.quit()
