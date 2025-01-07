@@ -243,6 +243,12 @@ class Game:
                 if Game.board[i][j] == 2048:
                     return True
                 
+    def collect_rewards():
+        #reset the reward
+        reward = 0
+
+        #find a way to store the old board and read the new board #TODO
+                
     def game_step(action):
         #keeps track of the board change
         board_changed = False
