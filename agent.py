@@ -43,10 +43,10 @@ class Agent:
     def get_action(self, state):
         # random moves: tradeoff exploration/explotation
         self.epsilon = 80 - self.n_games
-        final_move = [1, 0, 0, 0]
+        final_move = [0, 0, 0, 0]
 
         if random.randint(0, 200) < self.epsilon:
-            move = random.randint(0, 2)
+            move = random.randint(0, 3)
             final_move[move] = 1
         else:
             state0 = torch.tensor(state, dtype=torch.float)
@@ -56,20 +56,6 @@ class Agent:
 
         return final_move
     
-    # def get_action(self, state):
-    #     self.epsilon = max(10, 80 - self.n_games)  # Prevent epsilon from becoming negative
-    #     if random.uniform(0, 1) < self.epsilon / 100:
-    #         # Exploration: Random valid move
-    #         valid_moves = [i for i, move in enumerate([0, 1, 2, 3]) if self.is_valid_move(move)]
-    #         move = random.choice(valid_moves)
-    #     else:
-    #         # Exploitation: Predicted best move
-    #         state0 = torch.tensor(state, dtype=torch.float)
-    #         prediction = self.model(state0)
-    #         move = torch.argmax(prediction).item()
-    #     return [int(i == move) for i in range(4)]
-
-
 def train():
     plot_scores = []
     plot_mean_scores =[]
@@ -92,7 +78,8 @@ def train():
         board = game.board
 
         #performs move and gets new state
-        reward, done, score = game.game_step(final_move)
+        move = final_move.index(1)
+        reward, done, score = game.game_step(move)
         new_state = agent.get_state(board)
 
         #train the short memory

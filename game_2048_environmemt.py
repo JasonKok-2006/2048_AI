@@ -338,16 +338,16 @@ class Game:
         #This might cause crashes but we'll see later on
         previous_board = [row[:] for row in Game.board]  # Copy the board
 
-        if action == [1, 0, 0, 0]:
+        if action == 2:
             Game.left()
 
-        elif action == [0, 1, 0, 0]:
+        elif action == 3:
             Game.right()
 
-        elif action == [0, 0, 1, 0]:
+        elif action == 0:
             Game.up()
 
-        elif action == [0, 0, 0, 1]:
+        elif action == 1:
             Game.down()
 
         # Check if the board has changed
