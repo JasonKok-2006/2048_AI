@@ -18,6 +18,22 @@ class Game:
                   [0, 0, 0, 0],
                   [0, 0, 0, 0],
                   [0, 0, 0, 0]]
+    
+    tile_size = 100
+
+    #screen parameters
+    SCREEN_WIDTH = 400
+    SCREEN_HEIGHT = 400
+
+    #creates the game window
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    #dictionary to link value with images
+    images = dict([(0, "tiles/0.png"), (2, "tiles/2.png"), (4, "tiles/4.png"), (8, "tiles/8.png"), (16, "tiles/16.png"), (32, "tiles/32.png"), (64, "tiles/64.png"), (128, "tiles/128.png"), (256, "tiles/256.png"), (512, "tiles/512.png"), (1024, "tiles/1024.png"), (2048, "tiles/2048.png")])
+
+    #colours
+    bg = (200, 200, 200)
+    line = (0, 0, 0)
 
     def __init__(self):
         #screen parameters
@@ -46,9 +62,9 @@ class Game:
         pygame.init()
         pygame.display.set_caption("2048 AI")
 
-        Game.reset()
+        Game.reset(self)
 
-    def reset():
+    def reset(self):
         #2D array to keep track of the game
         Game.board = [[0, 0, 0, 0],
                       [0, 2, 0, 0],
@@ -318,9 +334,12 @@ class Game:
 
         return reward
         
-    def game_step(action):
+    def game_step(self, action):
         #keeps track of the board change
         board_changed = False
+
+        #keeps track if it is game over
+        done = False
 
         #keeps track of the score before the move
         previous_score = Game.score
@@ -363,18 +382,21 @@ class Game:
         # Check for game over
         if Game.game_over():
             print("Game Over!")
+            done = True
 
         #check if the game has been finished
         if Game.check_win():
             print("You win!")
 
-        Game.collect_rewards(Game.last_board, Game.board, score_increment)
+        reward = Game.collect_rewards(Game.last_board, Game.board, score_increment)
 
         #functions to change the display of the game screen
         Game.draw_grid(Game.tile_size)
         Game.correct_tiles()
 
         pygame.display.update()
+
+        return (reward, done, Game.score)
 
     # def start_game(self):
     #     clock = pygame.time.Clock()
