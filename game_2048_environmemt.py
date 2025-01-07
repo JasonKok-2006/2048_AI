@@ -48,7 +48,7 @@ class Game:
 
         Game.reset()
 
-    def reset(self):
+    def reset():
         #2D array to keep track of the game
         Game.board = [[0, 0, 0, 0],
                       [0, 2, 0, 0],
@@ -56,7 +56,7 @@ class Game:
                       [0, 0, 0, 0]]
 
     #This finction draws the grid to keep the tiles in
-    def draw_grid(self, tile_size):
+    def draw_grid(tile_size):
         Game.screen.fill(Game.bg)
 
         #veritcal lines
@@ -68,14 +68,14 @@ class Game:
             pygame.draw.line(Game.screen, Game.line, (0, x), (Game.SCREEN_WIDTH, x))
 
     #this function displays the tiles to the screen
-    def correct_tiles(self):
+    def correct_tiles():
         for i in range(0, 4):
             for j in range(0, 4):
                 if Game.board[i][j] > 0:
                     tile = pygame.image.load(Game.images[Game.board[i][j]])
                     Game.screen.blit(tile, ((j * 100) + 1, (i * 100) + 1))
 
-    def left(self):
+    def left():
         for i in range(0, 4):
             new_row = []
 
@@ -106,7 +106,7 @@ class Game:
             #replaces the old row with the new row
             Game.board[i] = new_row
 
-    def right(self):
+    def right():
         for i in range(4):  # Iterate over each row
             new_row = []
 
@@ -139,7 +139,7 @@ class Game:
             Game.board[i] = new_row[::-1]
 
 
-    def up(self):
+    def up():
         for i in range(0, 4):
             new_column = []
 
@@ -171,7 +171,7 @@ class Game:
             for k in range(0, 4):
                 Game.board[k][i] = new_column[k]
 
-    def down(self):
+    def down():
         for i in range(0, 4):
             new_column = []
 
@@ -207,7 +207,7 @@ class Game:
             for k in range(0, 4):
                 Game.board[k][i] = new_column[k]
 
-    def place_tile(self):
+    def place_tile():
         empty_spaces = []
 
         #checks the board for empty spaces
@@ -232,7 +232,7 @@ class Game:
         col = new_location_value % 4
         Game.board[row][col] = new_tile_value
 
-    def game_over(self):
+    def game_over():
         # Check for empty spaces
         for row in Game.board:
             if 0 in row:
@@ -252,13 +252,13 @@ class Game:
 
         return True  # No empty spaces or possible merges
 
-    def check_win(self):
+    def check_win():
         for i in range(0, 4):
             for j in range(0, 4):
                 if Game.board[i][j] == 2048:
                     return True
                 
-    def collect_rewards(self, last_board, board, score_increment):
+    def collect_rewards(last_board, board, score_increment):
         #reset the reward
         reward = 0
 
@@ -318,7 +318,7 @@ class Game:
 
         return reward
         
-    def game_step(self, action):
+    def game_step(action):
         #keeps track of the board change
         board_changed = False
 
