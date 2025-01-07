@@ -4,11 +4,20 @@ import random
 
 class Game:
 
+    #score
+    score = 0
+
     #2D array to keep track of the game
     board = [[0, 0, 0, 0],
             [0, 2, 0, 0],
             [0, 0, 2, 0],
             [0, 0, 0, 0]]
+    
+    #leave as blank but after each game step the board will equal the old board
+    last_board = [[0, 0, 0, 0],
+                  [0, 0, 0, 0],
+                  [0, 0, 0, 0],
+                  [0, 0, 0, 0]]
 
     def __init__(self):
         #screen parameters
@@ -39,7 +48,7 @@ class Game:
 
         Game.reset()
 
-    def reset():
+    def reset(self):
         #2D array to keep track of the game
         Game.board = [[0, 0, 0, 0],
                       [0, 2, 0, 0],
@@ -47,7 +56,7 @@ class Game:
                       [0, 0, 0, 0]]
 
     #This finction draws the grid to keep the tiles in
-    def draw_grid(tile_size):
+    def draw_grid(self, tile_size):
         Game.screen.fill(Game.bg)
 
         #veritcal lines
@@ -59,14 +68,14 @@ class Game:
             pygame.draw.line(Game.screen, Game.line, (0, x), (Game.SCREEN_WIDTH, x))
 
     #this function displays the tiles to the screen
-    def correct_tiles():
+    def correct_tiles(self):
         for i in range(0, 4):
             for j in range(0, 4):
                 if Game.board[i][j] > 0:
                     tile = pygame.image.load(Game.images[Game.board[i][j]])
                     Game.screen.blit(tile, ((j * 100) + 1, (i * 100) + 1))
 
-    def left():
+    def left(self):
         for i in range(0, 4):
             new_row = []
 
@@ -80,6 +89,8 @@ class Game:
                 if new_row[j] == new_row[j+1]:
                     new_row[j] *= 2
                     new_row[j+1] = 0
+                    #add this to the score
+                    Game.score += new_row[j]
             
             #find out how many zeros there are
             zero_count = new_row.count(0)
@@ -95,7 +106,7 @@ class Game:
             #replaces the old row with the new row
             Game.board[i] = new_row
 
-    def right():
+    def right(self):
         for i in range(4):  # Iterate over each row
             new_row = []
 
@@ -112,6 +123,8 @@ class Game:
                 if new_row[j] == new_row[j + 1]: 
                     new_row[j] *= 2 
                     new_row[j + 1] = 0  
+                    #add this to the score
+                    Game.score += new_row[j]
 
             #remove zeros created during merging
             zero_count = new_row.count(0)
@@ -126,7 +139,7 @@ class Game:
             Game.board[i] = new_row[::-1]
 
 
-    def up():
+    def up(self):
         for i in range(0, 4):
             new_column = []
 
@@ -140,6 +153,8 @@ class Game:
                 if new_column[j] == new_column[j+1]:
                     new_column[j] *= 2
                     new_column[j+1] = 0
+                    #add this to the score
+                    Game.score += new_column[j]
             
             #find out how many zeros there are
             zero_count = new_column.count(0)
@@ -156,7 +171,7 @@ class Game:
             for k in range(0, 4):
                 Game.board[k][i] = new_column[k]
 
-    def down():
+    def down(self):
         for i in range(0, 4):
             new_column = []
 
@@ -166,13 +181,13 @@ class Game:
                 if Game.board[j][i] != 0:
                     new_column.append(Game.board[j][i])
             
-
-
             #merge same values if they are adjacent
             for j in range(0, len(new_column) - 1):
                 if new_column[j] == new_column[j+1]:
                     new_column[j] *= 2
                     new_column[j+1] = 0
+                    #add this to the score
+                    Game.score += new_column[j]
             
             #find out how many zeros there are
             zero_count = new_column.count(0)
@@ -192,7 +207,7 @@ class Game:
             for k in range(0, 4):
                 Game.board[k][i] = new_column[k]
 
-    def place_tile():
+    def place_tile(self):
         empty_spaces = []
 
         #checks the board for empty spaces
@@ -217,7 +232,7 @@ class Game:
         col = new_location_value % 4
         Game.board[row][col] = new_tile_value
 
-    def game_over():
+    def game_over(self):
         # Check for empty spaces
         for row in Game.board:
             if 0 in row:
@@ -237,21 +252,81 @@ class Game:
 
         return True  # No empty spaces or possible merges
 
-    def check_win():
+    def check_win(self):
         for i in range(0, 4):
             for j in range(0, 4):
                 if Game.board[i][j] == 2048:
                     return True
                 
-    def collect_rewards():
+    def collect_rewards(self, last_board, board, score_increment):
         #reset the reward
         reward = 0
 
-        #find a way to store the old board and read the new board #TODO
-                
-    def game_step(action):
+        #we have these set up to compare
+        old_board = last_board
+        new_board = board
+
+        #reward increment, rewarded for a successful merge
+        reward += score_increment
+
+        #if the boards are equal, there would be a penalty
+        if board == last_board:
+            reward -= 5
+
+        #reward the AI for making a new highest tile
+        old_max_tile = max(old_board)
+        new_max_tile = max(new_board)
+        if new_max_tile > old_max_tile:
+            reward += 50
+
+        #penalty for game over
+        if Game.game_over():
+            reward -= 50
+        
+        #reward for keeping the highest tile closer to a corner
+        corners = [(0, 0), (0, 3), (3, 0), (3, 3)]
+        
+        #Find the highest tile values across the board 
+        old_max_tile = max(max(row) for row in old_board)
+        new_max_tile = max(max(row) for row in new_board)
+        
+        #helper finction to fond the position for all the instances of the max value
+        def find_positions(board, value):
+            positions = []
+            for i in range(0, 4):
+                for j in range(0, 4):
+                    if board[i][j] == value:
+                        positions.append((i, j))
+            return positions
+        
+        #Calculates the closest distance to one of the corners from the old board
+        old_distance = min(
+            abs(x - c[0]) + abs(y - c[1])
+            for (x, y) in find_positions(old_board, old_max_tile)
+            for c in corners
+        )
+
+        #Calculates the closest distance to one of the corners from the new board
+        new_distance = min(
+            abs(x - c[0]) + abs(y - c[1])
+            for (x, y) in find_positions(new_board, new_max_tile)
+            for c in corners
+        )
+
+        if new_distance < old_distance:
+            reward += 5
+
+        return reward
+        
+    def game_step(self, action):
         #keeps track of the board change
         board_changed = False
+
+        #keeps track of the score before the move
+        previous_score = Game.score
+
+        #keeps track of the board before the move
+        Game.last_board = Game.board
 
         #happens if an input has been made
         for event in pygame.event.get():
@@ -278,6 +353,9 @@ class Game:
         # Check if the board has changed
         board_changed = (previous_board != Game.board)
 
+        #calculate the score increment
+        score_increment = Game.score - previous_score
+
         #place a tile if the board has changed
         if board_changed:
             Game.place_tile()
@@ -289,7 +367,8 @@ class Game:
         #check if the game has been finished
         if Game.check_win():
             print("You win!")
-            run = False
+
+        Game.collect_rewards(Game.last_board, Game.board, score_increment)
 
         #functions to change the display of the game screen
         Game.draw_grid(Game.tile_size)
