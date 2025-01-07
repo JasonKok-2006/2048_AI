@@ -28,104 +28,104 @@ class Agent:
             for j in range(0, 4):
                 if board[i][j] == high_tile:
                     high_tile_space_value = (4*i) + j
-                    break
+                    
 
-        if high_tile_space_value in (0, 1, 4, 5):
-            square = 1
-        elif high_tile_space_value in (2, 3, 6, 7):
-            square = 2
-        elif high_tile_space_value in (8, 9, 12, 13):
-            square = 3
-        else:
-            square = 4
-        
-        #[1, 0, 0, 0] -> move left
-        #[0, 1, 0, 0] -> move right
-        #[0, 0, 1, 0] -> move up
-        #[0, 0, 0, 1] -> move down
+                    if high_tile_space_value in (0, 1, 4, 5):
+                        square = 1
+                    elif high_tile_space_value in (2, 3, 6, 7):
+                        square = 2
+                    elif high_tile_space_value in (8, 9, 12, 13):
+                        square = 3
+                    else:
+                        square = 4
+                    
+                    #[1, 0, 0, 0] -> move left
+                    #[0, 1, 0, 0] -> move right
+                    #[0, 0, 1, 0] -> move up
+                    #[0, 0, 0, 1] -> move down
 
-        #depending on where the high tile is, we make the move bring the tile closer to the corner.
-        #Random is being used here so if the move is actually invalid, the model will eventually make the valid move.
-        #chances are that this needs to be tweaked, we'll see.
+                    #depending on where the high tile is, we make the move bring the tile closer to the corner.
+                    #Random is being used here so if the move is actually invalid, the model will eventually make the valid move.
+                    #chances are that this needs to be tweaked, we'll see.
 
-        if square == 1:
-            if high_tile_space_value == 1:
-                random_action = random.randint(0, 100)
-                if random_action > 20:
-                    action = [1, 0, 0, 0]
-                else:
-                    action = [0, 0, 1, 0]
-            elif high_tile_space_value == 4:
-                random_action = random.randint(0, 100)
-                if random_action > 20:
-                    action = [0, 0, 1, 0]
-                else:
-                    action = [1, 0, 0, 0]
-            else:
-                random_action = random.randint(0, 100)
-                if random_action > 50:
-                    action = [0, 0, 1, 0]
-                else:
-                    action = [1, 0, 0, 0]
-        elif square == 2:
-            if high_tile_space_value == 2:
-                random_action = random.randint(0, 100)
-                if random_action > 20:
-                    action = [0, 1, 0, 0]
-                else:
-                    action = [0, 0, 1, 0]
-            elif high_tile_space_value == 7:
-                random_action = random.randint(0, 100)
-                if random_action > 20:
-                    action = [0, 0, 1, 0]
-                else:
-                    action = [0, 1, 0, 0]
-            else:
-                random_action = random.randint(0, 100)
-                if random_action > 50:
-                    action = [0, 0, 1, 0]
-                else:
-                    action = [0, 1, 0, 0]
-        if square == 3:
-            if high_tile_space_value == 8:
-                random_action = random.randint(0, 100)
-                if random_action > 20:
-                    action = [0, 0, 0, 1]
-                else:
-                    action = [1, 0, 0, 0]
-            elif high_tile_space_value == 13:
-                random_action = random.randint(0, 100)
-                if random_action > 20:
-                    action = [1, 0, 0, 0]
-                else:
-                    action = [0, 0, 0, 1]
-            else:
-                random_action = random.randint(0, 100)
-                if random_action > 50:
-                    action = [0, 0, 0, 1]
-                else:
-                    action = [1, 0, 0, 0]
-        else:
-            if high_tile_space_value == 14:
-                random_action = random.randint(0, 100)
-                if random_action > 20:
-                    action = [0, 1, 0, 0]
-                else:
-                    action = [0, 0, 0, 1]
-            elif high_tile_space_value == 11:
-                random_action = random.randint(0, 100)
-                if random_action > 20:
-                    action = [0, 0, 0, 1]
-                else:
-                    action = [0, 1, 0, 0]
-            else:
-                random_action = random.randint(0, 100)
-                if random_action > 50:
-                    action = [0, 0, 0, 1]
-                else:
-                    action = [0, 1, 0, 0]
+                    if square == 1:
+                        if high_tile_space_value == 1:
+                            random_action = random.randint(0, 100)
+                            if random_action > 20:
+                                action = [1, 0, 0, 0]
+                            else:
+                                action = [0, 0, 1, 0]
+                        elif high_tile_space_value == 4:
+                            random_action = random.randint(0, 100)
+                            if random_action > 20:
+                                action = [0, 0, 1, 0]
+                            else:
+                                action = [1, 0, 0, 0]
+                        else:
+                            random_action = random.randint(0, 100)
+                            if random_action > 50:
+                                action = [0, 0, 1, 0]
+                            else:
+                                action = [1, 0, 0, 0]
+                    elif square == 2:
+                        if high_tile_space_value == 2:
+                            random_action = random.randint(0, 100)
+                            if random_action > 20:
+                                action = [0, 1, 0, 0]
+                            else:
+                                action = [0, 0, 1, 0]
+                        elif high_tile_space_value == 7:
+                            random_action = random.randint(0, 100)
+                            if random_action > 20:
+                                action = [0, 0, 1, 0]
+                            else:
+                                action = [0, 1, 0, 0]
+                        else:
+                            random_action = random.randint(0, 100)
+                            if random_action > 50:
+                                action = [0, 0, 1, 0]
+                            else:
+                                action = [0, 1, 0, 0]
+                    if square == 3:
+                        if high_tile_space_value == 8:
+                            random_action = random.randint(0, 100)
+                            if random_action > 20:
+                                action = [0, 0, 0, 1]
+                            else:
+                                action = [1, 0, 0, 0]
+                        elif high_tile_space_value == 13:
+                            random_action = random.randint(0, 100)
+                            if random_action > 20:
+                                action = [1, 0, 0, 0]
+                            else:
+                                action = [0, 0, 0, 1]
+                        else:
+                            random_action = random.randint(0, 100)
+                            if random_action > 50:
+                                action = [0, 0, 0, 1]
+                            else:
+                                action = [1, 0, 0, 0]
+                    else:
+                        if high_tile_space_value == 14:
+                            random_action = random.randint(0, 100)
+                            if random_action > 20:
+                                action = [0, 1, 0, 0]
+                            else:
+                                action = [0, 0, 0, 1]
+                        elif high_tile_space_value == 11:
+                            random_action = random.randint(0, 100)
+                            if random_action > 20:
+                                action = [0, 0, 0, 1]
+                            else:
+                                action = [0, 1, 0, 0]
+                        else:
+                            random_action = random.randint(0, 100)
+                            if random_action > 50:
+                                action = [0, 0, 0, 1]
+                            else:
+                                action = [0, 1, 0, 0]
 
-        return action
+                    return action
 
     def remember(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
@@ -166,6 +166,7 @@ def train():
     record = 0
     agent = Agent()
     game = Game()
+    #game.start_game()
     while True:
         #get old state
         old_state = agent.get_state(game)

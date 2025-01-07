@@ -291,5 +291,9 @@ class Game:
 
         pygame.display.update()
 
-pygame.display.quit()
-pygame.quit()
+    # def start_game(self):
+    #     clock = pygame.time.Clock()
+    #     while True:
+    #         self.game_step(action=None)  # Pass actions during training
+    #         pygame.display.flip()
+    #         clock.tick(60)  # Limit to 60 FPS
