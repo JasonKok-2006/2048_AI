@@ -7,7 +7,7 @@ from model import Linear_QNet, QTrainer
 from plotter_helper import plot
 
 MAX_MEMORY = 10000
-BATCH_SIZE = 100
+BATCH_SIZE = 500
 LR = 0.001
 
 class Agent:
@@ -16,7 +16,7 @@ class Agent:
         self.epsilon = 0 #randomness 
         self.gamma = 0.9 #discount rate (keep samller then 1)
         self.memory = deque(maxlen = MAX_MEMORY)
-        self.model = Linear_QNet(16, 64, 4)
+        self.model = Linear_QNet(16, 256, 4)
         self.trainer = QTrainer(self.model, lr = LR, gamma = self.gamma)
 
     def get_state(self, board): 
@@ -42,10 +42,10 @@ class Agent:
 
     def get_action(self, state):
         # random moves: tradeoff exploration/explotation
-        self.epsilon = max(2, 50 - self.n_games)
+        self.epsilon = max(2, 200 - self.n_games)
         final_move = [0, 0, 0, 0]
 
-        if random.randint(0, 100) < self.epsilon:
+        if random.randint(0, 300) < self.epsilon:
             move = random.randint(0, 3)
             final_move[move] = 1
         else:

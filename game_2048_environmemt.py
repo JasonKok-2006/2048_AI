@@ -285,7 +285,7 @@ class Game:
         new_board = board
 
         #reward increment, rewarded for a successful merge
-        reward += 30
+        reward += 150
 
         #if the boards are equal, there would be a penalty
         if board == last_board:
@@ -295,11 +295,11 @@ class Game:
         old_max_tile = max(old_board)
         new_max_tile = max(new_board)
         if new_max_tile > old_max_tile:
-            reward += 150
+            reward += 250
 
         #penalty for game over
         if Game.game_over():
-            reward -= 250
+            reward -= 100
         
         #reward for keeping the highest tile closer to a corner
         corners = [(0, 0), (0, 3), (3, 0), (3, 3)]
@@ -332,9 +332,36 @@ class Game:
         )
 
         if new_distance < old_distance or new_distance == 0:
-            reward += 100
+            reward += 500
         else:
             reward -= 50
+
+        #cluster reward - reward if there are 2 matching tiles next to each other
+        cluster_reward = 0
+
+        for row in range(0, 4):
+            for col in range(0, 4):
+                #we check up
+                if row > 0:
+                    if new_board[row][col] == new_board[row-1][col]:
+                        cluster_reward += 5
+                
+                #we check down
+                if row < 3:
+                    if new_board[row][col] == new_board[row+1][col]:
+                        cluster_reward += 5
+                
+                #we check left
+                if col > 0:
+                    if new_board[row][col] == new_board[row][col-1]:
+                        cluster_reward += 5
+                
+                #we check right
+                if col < 3:
+                    if new_board[row][col] == new_board[row][col+1]:
+                        cluster_reward += 5
+        
+        reward += cluster_reward
 
         return reward
         
