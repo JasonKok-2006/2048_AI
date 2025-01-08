@@ -71,6 +71,8 @@ class Game:
                       [0, 0, 2, 0],
                       [0, 0, 0, 0]]
 
+        Game.score = 0
+
     #This finction draws the grid to keep the tiles in
     def draw_grid(tile_size):
         Game.screen.fill(Game.bg)
@@ -335,6 +337,7 @@ class Game:
         return reward
         
     def game_step(self, action):
+
         #keeps track of the board change
         board_changed = False
 
