@@ -285,17 +285,17 @@ class Game:
         new_board = board
 
         #reward increment, rewarded for a successful merge
-        reward += score_increment
+        reward += 30
 
         #if the boards are equal, there would be a penalty
         if board == last_board:
-            reward -= 50
+            reward -= 40
 
         #reward the AI for making a new highest tile
         old_max_tile = max(old_board)
         new_max_tile = max(new_board)
         if new_max_tile > old_max_tile:
-            reward += 200
+            reward += 150
 
         #penalty for game over
         if Game.game_over():
@@ -331,8 +331,10 @@ class Game:
             for c in corners
         )
 
-        if new_distance < old_distance:
-            reward += 180
+        if new_distance < old_distance or new_distance == 0:
+            reward += 100
+        else:
+            reward -= 50
 
         return reward
         

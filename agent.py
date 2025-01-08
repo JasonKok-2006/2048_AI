@@ -7,8 +7,8 @@ from model import Linear_QNet, QTrainer
 from plotter_helper import plot
 
 MAX_MEMORY = 10000
-BATCH_SIZE = 40
-LR = 0.02
+BATCH_SIZE = 100
+LR = 0.001
 
 class Agent:
     def __init__(self):
@@ -16,7 +16,7 @@ class Agent:
         self.epsilon = 0 #randomness 
         self.gamma = 0.9 #discount rate (keep samller then 1)
         self.memory = deque(maxlen = MAX_MEMORY)
-        self.model = Linear_QNet(16, 256, 4)
+        self.model = Linear_QNet(16, 64, 4)
         self.trainer = QTrainer(self.model, lr = LR, gamma = self.gamma)
 
     def get_state(self, board): 
@@ -42,7 +42,7 @@ class Agent:
 
     def get_action(self, state):
         # random moves: tradeoff exploration/explotation
-        self.epsilon = 50 - self.n_games
+        self.epsilon = max(2, 50 - self.n_games)
         final_move = [0, 0, 0, 0]
 
         if random.randint(0, 100) < self.epsilon:
@@ -57,10 +57,12 @@ class Agent:
         return final_move
     
 def train():
-    plot_scores = []
+    plot_last10_avaerage_scores = []
     plot_mean_scores = []
     plot_highest = []
+    last10_scores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     total_score = 0
+    last10_scores_average = 0
     record = 0
     agent = Agent()
     game = Game()
@@ -92,6 +94,7 @@ def train():
         if done:
             #train long memory, plot result
             game.reset()
+            non_zero = 0
             agent.n_games += 1
             agent.train_long_memory()
 
@@ -101,7 +104,18 @@ def train():
 
             print("Game: ", agent.n_games, "Score: ", score, "Record: ", record)
 
-            plot_scores.append(score)
+            for i in range(0, 9):
+                last10_scores[i] = last10_scores[i+1]
+            last10_scores[9] = score
+
+            for i in range(0, 10):
+                if last10_scores[i] > 0:
+                    last10_scores_average += last10_scores[i]
+                    non_zero += 1
+
+            last10_scores_average = int(last10_scores_average / non_zero)
+
+            plot_last10_avaerage_scores.append(last10_scores_average)
             total_score += score 
             mean_score = int(total_score / agent.n_games)
             plot_mean_scores.append(mean_score)
@@ -112,7 +126,7 @@ def train():
             highest_tile = max(row_max)
 
             plot_highest.append(highest_tile)
-            plot(plot_scores, plot_mean_scores, plot_highest)
+            plot(plot_last10_avaerage_scores, plot_mean_scores, plot_highest)
             score = 0
 
 if __name__ == "__main__":
