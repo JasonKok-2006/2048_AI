@@ -289,17 +289,17 @@ class Game:
 
         #if the boards are equal, there would be a penalty
         if board == last_board:
-            reward -= 5
+            reward -= 50
 
         #reward the AI for making a new highest tile
         old_max_tile = max(old_board)
         new_max_tile = max(new_board)
         if new_max_tile > old_max_tile:
-            reward += 50
+            reward += 200
 
         #penalty for game over
         if Game.game_over():
-            reward -= 50
+            reward -= 250
         
         #reward for keeping the highest tile closer to a corner
         corners = [(0, 0), (0, 3), (3, 0), (3, 3)]
@@ -332,7 +332,7 @@ class Game:
         )
 
         if new_distance < old_distance:
-            reward += 5
+            reward += 180
 
         return reward
         
